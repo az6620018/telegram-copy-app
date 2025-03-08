@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>链接分享工具</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            color: var(--tg-theme-text-color, #000);
+            background-color: var(--tg-theme-bg-color, #fff);
+        }
+        .copy-button {
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .link-container {
+            margin-top: 20px;
+            word-break: break-all;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>分享链接</h2>
+    <div class="link-container" id="linkContainer"></div>
+    <button class="copy-button" id="copyButton">复制链接</button>
+    <div class="success-message" id="successMessage">链接已复制到剪贴板！</div>
+    
+    <script>
+        // 初始化 Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const linkToShare = urlParams.get('link');
+        
+        // 显示链接
+        document.getElementById('linkContainer').textContent = linkToShare;
+        
+        // 复制链接功能
+        document.getElementById('copyButton').addEventListener('click', function() {
+            navigator.clipboard.writeText(linkToShare).then(function() {
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(function() {
+                    tg.close();
+                }, 1500);
+            }).catch(function(err) {
+                console.error('无法复制链接: ', err);
+            });
+        });
+    </script>
+</body>
+</html>
